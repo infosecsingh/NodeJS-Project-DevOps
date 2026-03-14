@@ -1,13 +1,13 @@
 
 services:
   frontend:
-    image: frontend:latest
+    image: 1nfosecsingh/frontend:dev-latest
     container_name: frontend
     networks:
       - app 
   
   backend:
-    image: backend:latest
+    image: 1nfosecsingh/backend:dev-latest
     container_name: backend
     depends_on:
       - frontend
@@ -15,7 +15,7 @@ services:
       - app 
 
   notification:
-    image: notification:latest
+    image: 1nfosecsingh/notification:dev-latest
     container_name: notification
     depends_on:
       - frontend
@@ -23,7 +23,7 @@ services:
       - app 
 
   gateway:
-    image: gateway:latest
+    image: 1nfosecsingh/gateway:dev-latest
     container_name: gateway
     ports:
       - "80:80"
