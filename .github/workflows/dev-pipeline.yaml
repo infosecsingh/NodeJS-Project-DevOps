@@ -68,7 +68,20 @@ jobs:
               id: frontend
               run: |
                 docker build -t ${{ secrets.DOCKER_USERNAME }}/frontend:dev-latest ./frontend
-               
+                docker build -t ${{ secrets.DOCKER_USERNAME }}/frontend:dev-${{ env.SHORT_SHA }} ./frontend
+                docker build -t ${{ secrets.DOCKER_USERNAME }}/frontend:dev-${{ env.IMAGE_TAG }} ./frontend
+
+
+            ## Image push to docker hub 
+            - name: frontend docker push
+              id: frontend-push
+              run: |
+                docker push ${{ secrets.DOCKER_USERNAME }}/frontend:dev-latest
+                docker push ${{ secrets.DOCKER_USERNAME }}/frontend:dev-${{ env.SHORT_SHA }}
+                docker push ${{ secrets.DOCKER_USERNAME }}/frontend:dev-${{ env.IMAGE_TAG }}
+
+
+
   
 
 
