@@ -7,7 +7,6 @@ on:
   push:
     branches:
       - feature
-      - master
 
 #step3 - (Where) this pipeline 
 jobs:
