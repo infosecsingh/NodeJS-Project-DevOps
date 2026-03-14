@@ -6,7 +6,7 @@ name: dev pipeline
 on:
   push:
     branches:
-      - feature
+      - 'feature/**'
 
 
 #step3 - (Where) this pipeline 
