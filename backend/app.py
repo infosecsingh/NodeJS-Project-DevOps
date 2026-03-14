@@ -14,7 +14,7 @@ def contact():
 
     # send to node notification service
     requests.post(
-        "http://localhost:3001/send",
+        "http://notification:3001/send",
         json={
             "name": name,
             "email": email,

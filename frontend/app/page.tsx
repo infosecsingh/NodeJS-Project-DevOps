@@ -32,7 +32,7 @@ export default function Home() {
 
         <section id="contact">
           <h2 className="text-4xl font-bold text-center mb-8">Contact Me</h2>
-          <form action="http://localhost:5000/contact" method="POST" className="max-w-xl mx-auto">
+          <form action="/contact" method="POST" className="max-w-xl mx-auto">
             <div className="mb-4">
               <input name="name" placeholder="Name" className="w-full p-3 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"/>
             </div>
