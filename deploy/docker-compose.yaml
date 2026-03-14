@@ -1,0 +1,39 @@
+
+services:
+  frontend:
+    image: frontend:latest
+    container_name: frontend
+    networks:
+      - app 
+  
+  backend:
+    image: backend:latest
+    container_name: backend
+    depends_on:
+      - frontend
+    networks:
+      - app 
+
+  notification:
+    image: notification:latest
+    container_name: notification
+    depends_on:
+      - frontend
+    networks:
+      - app 
+
+  gateway:
+    image: gateway:latest
+    container_name: gateway
+    ports:
+      - "80:80"
+    depends_on:
+      - frontend
+      - backend
+      - notification
+    networks:
+      - app 
+
+networks:
+  app:
+
