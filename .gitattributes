@@ -1,4 +1,0 @@
-.github/workflows/prod-pipeline.yml merge=ours
-.github/workflows/dev-ci-pipeline.yml merge=ours
-.github/workflows/dev-cd-pipeline.yml merge=ours
-.github/workflows/staging-pipeline.yml merge=ours
