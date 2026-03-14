@@ -6,7 +6,7 @@ app = Flask(__name__)
 @app.route("/contact", methods=["POST"])
 def contact():
 
-    data = request.json
+    data = request.form
 
     name = data["name"]
     email = data["email"]
@@ -14,8 +14,12 @@ def contact():
 
     # send to node notification service
     requests.post(
-        "http://notification:3000/send",
-        json=data
+        "http://localhost:3001/send",
+        json={
+            "name": name,
+            "email": email,
+            "message": message
+        }
     )
 
     return jsonify({"status":"received"})
