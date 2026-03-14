@@ -1,5 +1,5 @@
 # step 1 anything you want to call - so lets dev branch 
-name: dev ci pipeline
+name: dev pipeline
 
 #Step2  (when) this pipeline trigger
 
@@ -11,19 +11,9 @@ on:
 
 #step3 - (Where) this pipeline 
 jobs:
+  
         build:
           runs-on: ubuntu-latest
-
-# Step 4 - (What will be executed like steps)
-
-#---------------------------------#
-#push changes in feature
-#code testing - lint 
-#vulnerabilities testing
-#build docker images
-#push images - public/private 
-#deploy in docker compose for testing.  
-#---------------------------------#
 
           steps:
             - name: Checkout code
@@ -42,9 +32,6 @@ jobs:
                     python -m pip install --upgrade pip 
                     pip install --upgrade pip
                     pip install flake8
-
-            # - name: lint testing
-            #   run: flake8 --ignore=E501,F401 . 
 
             # Docker credentials
             - name: Login docker hub
@@ -111,6 +98,35 @@ jobs:
                 docker push ${{ secrets.DOCKER_USERNAME }}/gateway:dev-latest
                 docker push ${{ secrets.DOCKER_USERNAME }}/gateway:dev-${{ env.SHORT_SHA }}
                 docker push ${{ secrets.DOCKER_USERNAME }}/gateway:dev-${{ env.IMAGE_TAG }}
+
+        deploy:
+          needs:
+            - build
+          runs-on: ubuntu-latest
+
+          steps:
+            - name: Checkout code
+              uses: actions/checkout@v2
+
+            - name: SSH into server 
+              uses: appleboy/ssh-action@v2 
+              with:
+                host: ${{ secrets.HOSTSERVER }}
+                username: ${{ secrets.USERNAME }}
+                private_key: ${{ secrets.PRIVATE_KEY }}
+                script: |  
+                  cd /home/ubuntu/app
+                  git fetch origin feature 
+                  git reset --hard origin/feature
+                  
+                  cd /home/ubuntu/app/deploy
+                  docker-compose pull   
+                  docker-compose up -d 
+
+
+
+
+        
 
 
  
