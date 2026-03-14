@@ -67,10 +67,8 @@ jobs:
             - name: frontend docker images
               id: frontend
               run: |
-                docker build -t ${{ secrets.DOCKER_USERNAME }}/frontend:dev-latest ./frontend 
+                docker build -t ${{ secrets.DOCKER_USERNAME }}/frontend:dev-latest ./frontend
                
-   # -t ${{ secrets.DOCKER_USERNAME }}/frontend:dev-${{ env.IMAGE_TAG }} \
-                  # -t ${{ secrets.DOCKER_USERNAME }}/frontend:dev-${{ env.SHORT_SHA }} \
-                  # ./frontend
+  
 
 
