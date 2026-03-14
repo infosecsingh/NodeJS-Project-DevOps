@@ -7,7 +7,7 @@ export default function Home() {
     <div className="bg-gray-900 text-white min-h-screen">
       <header className="bg-gray-800 p-4">
         <div className="container mx-auto flex justify-between items-center">
-          <h1 className={`text-3xl ${font.className}`}>Inderjeet Singh</h1>
+          <h1 className={`text-3xl ${font.className}`}>Inderjeet Singh Bedi</h1>
           <nav>
             <a href="#skills" className="text-lg text-gray-300 hover:text-white mr-4">Skills</a>
             <a href="#contact" className="text-lg text-gray-300 hover:text-white">Contact</a>
