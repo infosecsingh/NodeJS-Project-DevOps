@@ -71,14 +71,52 @@ jobs:
                 docker build -t ${{ secrets.DOCKER_USERNAME }}/frontend:dev-${{ env.SHORT_SHA }} ./frontend
                 docker build -t ${{ secrets.DOCKER_USERNAME }}/frontend:dev-${{ env.IMAGE_TAG }} ./frontend
 
+            ## Image build for backend
+            - name: backend docker images
+              id: backend
+              run: |
+                docker build -t ${{ secrets.DOCKER_USERNAME }}/backend:dev-latest ./backend
+                docker build -t ${{ secrets.DOCKER_USERNAME }}/backend:dev-${{ env.SHORT_SHA }} ./backend 
+                docker build -t ${{ secrets.DOCKER_USERNAME }}/backend:dev-${{ env.IMAGE_TAG }} ./backend
+
+            ## Image build for notification server
+            - name: notification server docker images
+              id: notification-server
+              run: |
+                docker build -t ${{ secrets.DOCKER_USERNAME }}/notification:dev-latest ./notification
+                docker build -t ${{ secrets.DOCKER_USERNAME }}/notification:dev-${{ env.SHORT_SHA }} ./notification
+                docker build -t ${{ secrets.DOCKER_USERNAME }}/notification:dev-${{ env.IMAGE_TAG }} ./notification
+
+            ## Image build for gateway nginx server 
+            - name: gateway nginx docker images
+              id: gateway-nginx 
+              run: |
+                docker build -t ${{ secrets.DOCKER_USERNAME }}/gateway:dev-latest ./nginx
+                docker build -t ${{ secrets.DOCKER_USERNAME }}/gateway:dev-${{ env.SHORT_SHA }} ./nginx
+                docker build -t ${{ secrets.DOCKER_USERNAME }}/gateway:dev-${{ env.IMAGE_TAG }} ./nginx
+
 
             ## Image push to docker hub 
-            - name: frontend docker push
-              id: frontend-push
+            - name: docker push
               run: |
                 docker push ${{ secrets.DOCKER_USERNAME }}/frontend:dev-latest
                 docker push ${{ secrets.DOCKER_USERNAME }}/frontend:dev-${{ env.SHORT_SHA }}
                 docker push ${{ secrets.DOCKER_USERNAME }}/frontend:dev-${{ env.IMAGE_TAG }}
+                docker push ${{ secrets.DOCKER_USERNAME }}/backend:dev-latest
+                docker push ${{ secrets.DOCKER_USERNAME }}/backend:dev-${{ env.SHORT_SHA }}
+                docker push ${{ secrets.DOCKER_USERNAME }}/backend:dev-${{ env.IMAGE_TAG }}
+                docker push ${{ secrets.DOCKER_USERNAME }}/notification:dev-latest
+                docker push ${{ secrets.DOCKER_USERNAME }}/notification:dev-${{ env.SHORT_SHA }}
+                docker push ${{ secrets.DOCKER_USERNAME }}/notification:dev-${{ env.IMAGE_TAG }}
+                docker push ${{ secrets.DOCKER_USERNAME }}/gateway:dev-latest
+                docker push ${{ secrets.DOCKER_USERNAME }}/gateway:dev-${{ env.SHORT_SHA }}
+                docker push ${{ secrets.DOCKER_USERNAME }}/gateway:dev-${{ env.IMAGE_TAG }}
+
+
+ 
+
+
+
 
 
 
