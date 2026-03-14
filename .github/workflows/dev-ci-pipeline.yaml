@@ -111,9 +111,9 @@ jobs:
             - name: SSH into server 
               uses: appleboy/ssh-action@v0.1.10 
               with:
-                host: ${{ secrets.HOSTSERVER }}
+                host: ${{ secrets.HOST }}
                 username: ${{ secrets.USERNAME }}
-                private_key: ${{ secrets.PRIVATE_KEY }}
+                private_key: ${{ secrets.PASSWORD }}
                 script: |  
                   cd /home/ubuntu/app
                   git fetch origin feature 
