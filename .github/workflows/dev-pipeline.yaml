@@ -121,14 +121,15 @@ jobs:
                 ssh -i web-server.pem -o StrictHostKeyChecking=no ${{ env.EC2_USER }}@${{ env.EC2_HOST }} 'ls -la'
                 # Optionally remove the file afterward if the job is long-running and you want to be extra secure
                 rm web-server.pem
-              script: |  
-                  cd /home/ubuntu/app
-                  git fetch origin feature 
-                  git reset --hard origin/feature
+                cd /home/ubuntu/app
+                git fetch origin feature 
+                git reset --hard origin/feature
                   
-                  cd /home/ubuntu/app/deploy
-                  docker-compose pull   
-                  docker-compose up -d 
+                cd /home/ubuntu/app/deploy
+                docker-compose pull   
+                docker-compose up -d 
+
+          
 
 
 
