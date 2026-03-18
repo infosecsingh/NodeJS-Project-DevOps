@@ -108,7 +108,6 @@ jobs:
             - name: Checkout code
               uses: actions/checkout@v2
 
-<<<<<<< HEAD
             - name: SSH server 
               env:
                 EC2_HOST: ${{ secrets.EC2_HOST }}
