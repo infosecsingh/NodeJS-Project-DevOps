@@ -12,92 +12,92 @@ on:
 #step3 - (Where) this pipeline 
 jobs:
   
-        build:
-          runs-on: ubuntu-latest
+        # build:
+        #   runs-on: ubuntu-latest
 
-          steps:
-            - name: Checkout code
-              uses: actions/checkout@v2
+        #   steps:
+        #     - name: Checkout code
+        #       uses: actions/checkout@v2
 
-            - name: Setup python
-              uses: actions/setup-python@v2
-              with:
-                python-version: '3.8'
+        #     - name: Setup python
+        #       uses: actions/setup-python@v2
+        #       with:
+        #         python-version: '3.8'
 
-            - name: Setup Docker 
-              uses: docker/setup-buildx-action@v2
+        #     - name: Setup Docker 
+        #       uses: docker/setup-buildx-action@v2
 
-            - name: Dependency install
-              run: |
-                    python -m pip install --upgrade pip 
-                    pip install --upgrade pip
-                    pip install flake8
+        #     - name: Dependency install
+        #       run: |
+        #             python -m pip install --upgrade pip 
+        #             pip install --upgrade pip
+        #             pip install flake8
 
-            # Docker credentials
-            - name: Login docker hub
-              uses: docker/login-action@v2
-              with:
-                username: ${{ secrets.DOCKER_USERNAME }}
-                password: ${{ secrets.DOCKER_PASSWORD }}
-                registry: docker.io
+        #     # Docker credentials
+        #     - name: Login docker hub
+        #       uses: docker/login-action@v2
+        #       with:
+        #         username: ${{ secrets.DOCKER_USERNAME }}
+        #         password: ${{ secrets.DOCKER_PASSWORD }}
+        #         registry: docker.io
 
               
-            # Tags management - setup veriables 
-            - name: tagging images
-              id: vars
-              run: | 
-                echo "SHORT_SHA=$(echo $GITHUB_SHA | cut -c1-7)" >> $GITHUB_ENV
-                echo "IMAGE_TAG=${GITHUB_RUN_NUMBER}" >> $GITHUB_ENV
+        #     # Tags management - setup veriables 
+        #     - name: tagging images
+        #       id: vars
+        #       run: | 
+        #         echo "SHORT_SHA=$(echo $GITHUB_SHA | cut -c1-7)" >> $GITHUB_ENV
+        #         echo "IMAGE_TAG=${GITHUB_RUN_NUMBER}" >> $GITHUB_ENV
 
 
-            ## Image build for frontend 
-            - name: frontend docker images
-              id: frontend
-              run: |
-                docker build -t ${{ secrets.DOCKER_USERNAME }}/frontend:dev-latest ./frontend
-                docker build -t ${{ secrets.DOCKER_USERNAME }}/frontend:dev-${{ env.SHORT_SHA }} ./frontend
-                docker build -t ${{ secrets.DOCKER_USERNAME }}/frontend:dev-${{ env.IMAGE_TAG }} ./frontend
+        #     ## Image build for frontend 
+        #     - name: frontend docker images
+        #       id: frontend
+        #       run: |
+        #         docker build -t ${{ secrets.DOCKER_USERNAME }}/frontend:dev-latest ./frontend
+        #         docker build -t ${{ secrets.DOCKER_USERNAME }}/frontend:dev-${{ env.SHORT_SHA }} ./frontend
+        #         docker build -t ${{ secrets.DOCKER_USERNAME }}/frontend:dev-${{ env.IMAGE_TAG }} ./frontend
 
-            ## Image build for backend
-            - name: backend docker images
-              id: backend
-              run: |
-                docker build -t ${{ secrets.DOCKER_USERNAME }}/backend:dev-latest ./backend
-                docker build -t ${{ secrets.DOCKER_USERNAME }}/backend:dev-${{ env.SHORT_SHA }} ./backend 
-                docker build -t ${{ secrets.DOCKER_USERNAME }}/backend:dev-${{ env.IMAGE_TAG }} ./backend
+        #     ## Image build for backend
+        #     - name: backend docker images
+        #       id: backend
+        #       run: |
+        #         docker build -t ${{ secrets.DOCKER_USERNAME }}/backend:dev-latest ./backend
+        #         docker build -t ${{ secrets.DOCKER_USERNAME }}/backend:dev-${{ env.SHORT_SHA }} ./backend 
+        #         docker build -t ${{ secrets.DOCKER_USERNAME }}/backend:dev-${{ env.IMAGE_TAG }} ./backend
 
-            ## Image build for notification server
-            - name: notification server docker images
-              id: notification-server
-              run: |
-                docker build -t ${{ secrets.DOCKER_USERNAME }}/notification:dev-latest ./notification
-                docker build -t ${{ secrets.DOCKER_USERNAME }}/notification:dev-${{ env.SHORT_SHA }} ./notification
-                docker build -t ${{ secrets.DOCKER_USERNAME }}/notification:dev-${{ env.IMAGE_TAG }} ./notification
+        #     ## Image build for notification server
+        #     - name: notification server docker images
+        #       id: notification-server
+        #       run: |
+        #         docker build -t ${{ secrets.DOCKER_USERNAME }}/notification:dev-latest ./notification
+        #         docker build -t ${{ secrets.DOCKER_USERNAME }}/notification:dev-${{ env.SHORT_SHA }} ./notification
+        #         docker build -t ${{ secrets.DOCKER_USERNAME }}/notification:dev-${{ env.IMAGE_TAG }} ./notification
 
-            ## Image build for gateway nginx server 
-            - name: gateway nginx docker images
-              id: gateway-nginx 
-              run: |
-                docker build -t ${{ secrets.DOCKER_USERNAME }}/gateway:dev-latest ./nginx
-                docker build -t ${{ secrets.DOCKER_USERNAME }}/gateway:dev-${{ env.SHORT_SHA }} ./nginx
-                docker build -t ${{ secrets.DOCKER_USERNAME }}/gateway:dev-${{ env.IMAGE_TAG }} ./nginx
+        #     ## Image build for gateway nginx server 
+        #     - name: gateway nginx docker images
+        #       id: gateway-nginx 
+        #       run: |
+        #         docker build -t ${{ secrets.DOCKER_USERNAME }}/gateway:dev-latest ./nginx
+        #         docker build -t ${{ secrets.DOCKER_USERNAME }}/gateway:dev-${{ env.SHORT_SHA }} ./nginx
+        #         docker build -t ${{ secrets.DOCKER_USERNAME }}/gateway:dev-${{ env.IMAGE_TAG }} ./nginx
 
 
-            ## Image push to docker hub 
-            - name: docker push
-              run: |
-                docker push ${{ secrets.DOCKER_USERNAME }}/frontend:dev-latest
-                docker push ${{ secrets.DOCKER_USERNAME }}/frontend:dev-${{ env.SHORT_SHA }}
-                docker push ${{ secrets.DOCKER_USERNAME }}/frontend:dev-${{ env.IMAGE_TAG }}
-                docker push ${{ secrets.DOCKER_USERNAME }}/backend:dev-latest
-                docker push ${{ secrets.DOCKER_USERNAME }}/backend:dev-${{ env.SHORT_SHA }}
-                docker push ${{ secrets.DOCKER_USERNAME }}/backend:dev-${{ env.IMAGE_TAG }}
-                docker push ${{ secrets.DOCKER_USERNAME }}/notification:dev-latest
-                docker push ${{ secrets.DOCKER_USERNAME }}/notification:dev-${{ env.SHORT_SHA }}
-                docker push ${{ secrets.DOCKER_USERNAME }}/notification:dev-${{ env.IMAGE_TAG }}
-                docker push ${{ secrets.DOCKER_USERNAME }}/gateway:dev-latest
-                docker push ${{ secrets.DOCKER_USERNAME }}/gateway:dev-${{ env.SHORT_SHA }}
-                docker push ${{ secrets.DOCKER_USERNAME }}/gateway:dev-${{ env.IMAGE_TAG }}
+        #     ## Image push to docker hub 
+        #     - name: docker push
+        #       run: |
+        #         docker push ${{ secrets.DOCKER_USERNAME }}/frontend:dev-latest
+        #         docker push ${{ secrets.DOCKER_USERNAME }}/frontend:dev-${{ env.SHORT_SHA }}
+        #         docker push ${{ secrets.DOCKER_USERNAME }}/frontend:dev-${{ env.IMAGE_TAG }}
+        #         docker push ${{ secrets.DOCKER_USERNAME }}/backend:dev-latest
+        #         docker push ${{ secrets.DOCKER_USERNAME }}/backend:dev-${{ env.SHORT_SHA }}
+        #         docker push ${{ secrets.DOCKER_USERNAME }}/backend:dev-${{ env.IMAGE_TAG }}
+        #         docker push ${{ secrets.DOCKER_USERNAME }}/notification:dev-latest
+        #         docker push ${{ secrets.DOCKER_USERNAME }}/notification:dev-${{ env.SHORT_SHA }}
+        #         docker push ${{ secrets.DOCKER_USERNAME }}/notification:dev-${{ env.IMAGE_TAG }}
+        #         docker push ${{ secrets.DOCKER_USERNAME }}/gateway:dev-latest
+        #         docker push ${{ secrets.DOCKER_USERNAME }}/gateway:dev-${{ env.SHORT_SHA }}
+        #         docker push ${{ secrets.DOCKER_USERNAME }}/gateway:dev-${{ env.IMAGE_TAG }}
 
         deploy:
           needs:
@@ -118,7 +118,7 @@ jobs:
                 echo "$SSH_PRIVATE_KEY" > web-server.pem
                 chmod 600 web-server.pem
                 # Connect using the specific identity file
-                ssh -i web-server.pem -o StrictHostKeyChecking=no ${{ env.EC2_USER }}@${{ env.EC2_HOST }} 'ls -la'
+                ssh -i ${{ env.SSH_PRIVATE_KEY }} -o StrictHostKeyChecking=no ${{ env.EC2_USER }}@${{ env.EC2_HOST }} 'ls -la'
                 # Optionally remove the file afterward if the job is long-running and you want to be extra secure
                 rm web-server.pem
                 cd /home/ubuntu/app
