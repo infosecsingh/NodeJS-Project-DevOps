@@ -103,6 +103,8 @@ jobs:
           needs:
             - build
           runs-on: ubuntu-latest
+          environment: production
+
 
           steps:
             - name: Checkout code
@@ -120,15 +122,20 @@ jobs:
                 ssh -i private_key.pem -o StrictHostKeyChecking=no \
                   ${EC2_USERNAME}@${EC2_HOST} << 'EOF'
                   mkdir -p /home/ubuntu/app
-
-
                   cd /home/ubuntu/app
 
-                  git clone https://github.com/infosecsingh/NodeJS-Project-DevOps.git
-                  cd NodeJS-Project-DevOps/deploy
-                  docker-compose pull
-                  docker-compose up -d
+                  if [ -d "NodeJS-Project-DevOps" ]; then
+                    cd NodeJS-Project-DevOps
+                    git fetch origin feature
+                    git reset --hard origin/feature
+                  else
+                    git clone https://github.com/infosecsingh/NodeJS-Project-DevOps.git
+                    cd NodeJS-Project-DevOps
+                  fi
 
+                  cd deploy
+                  docker-compose pull
+                  docker-compose up -d --force-recreate
                 EOF
 
                 rm private_key.pem     
