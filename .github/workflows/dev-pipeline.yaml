@@ -123,9 +123,9 @@ jobs:
 
 
                   cd /home/ubuntu/app
-                  git fetch origin feature
-                  git reset --hard origin/feature
-                  cd /home/ubuntu/app/deploy
+
+                  git clone https://github.com/infosecsingh/NodeJS-Project-DevOps.git
+                  cd NodeJS-Project-DevOps/deploy
                   docker-compose pull
                   docker-compose up -d
 
