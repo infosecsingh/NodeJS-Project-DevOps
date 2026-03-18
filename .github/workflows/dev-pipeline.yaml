@@ -110,12 +110,11 @@ jobs:
 
             - name: SSH into server 
               env:
-                SSH_PRIVATE_KEY: ${{ secrets.PASSWORD }}
                 EC2_HOST: ${{ secrets.HOST }}
                 EC2_USER: ${{ secrets.USERNAME }}
               run: |
                 # Write the secret to a file and set correct permissions
-                echo "$SSH_PRIVATE_KEY" > web-server.pem
+                echo ${{ secrets.PASSWORD }} >> web-server.pem
                 chmod 600 web-server.pem
                 # Connect using the specific identity file
                 ssh -i web-server.pem -o StrictHostKeyChecking=no ${{ env.EC2_USER }}@${{ env.EC2_HOST }} 
