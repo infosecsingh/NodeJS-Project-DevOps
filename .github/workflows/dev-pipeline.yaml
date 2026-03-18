@@ -108,23 +108,29 @@ jobs:
             - name: Checkout code
               uses: actions/checkout@v2
 
-            - name: SSH into server 
+            - name: SSH server 
               env:
-                SSH_PRIVATE_KEY: ${{ secrets.PASSWORD }}
-                EC2_HOST: ${{ secrets.HOST }}
-                EC2_USER: ${{ secrets.USERNAME }}
+                EC2_HOST: ${{ secrets.EC2_HOST }}
+                EC2_USERNAME: ${{ secrets.EC2_USERNAME }}
+                SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
               run: |
-                echo "$SSH_PRIVATE_KEY" > web-server.pem
-                chmod 600 web-server.pem
-                ssh -i web-server.pem -o StrictHostKeyChecking=no ${{ env.EC2_USER }}@${{ env.EC2_HOST }} '
+                echo "$SSH_PRIVATE_KEY" > private_key.pem
+                chmod 600 private_key.pem
+
+                ssh -i private_key.pem -o StrictHostKeyChecking=no \
+                  ${EC2_USERNAME}@${EC2_HOST} << 'EOF'
+                  mkdir -p /home/ubuntu/app
                   cd /home/ubuntu/app
                   git fetch origin feature
                   git reset --hard origin/feature
                   cd /home/ubuntu/app/deploy
                   docker-compose pull
                   docker-compose up -d
-                '
-                rm web-server.pem
+                EOF
+
+                rm private_key.pem     
+
+            
 
           
 
@@ -135,7 +141,7 @@ jobs:
 
 
  
-
+  
 
 
 
