@@ -118,7 +118,7 @@ jobs:
                 echo "$SSH_PRIVATE_KEY" > web-server.pem
                 chmod 600 web-server.pem
                 # Connect using the specific identity file
-                ssh -i ${{ env.SSH_PRIVATE_KEY }} -o StrictHostKeyChecking=no ${{ env.EC2_USER }}@${{ env.EC2_HOST }} 'ls -la'
+                ssh -i web-server.pem -o StrictHostKeyChecking=no ${{ env.EC2_USER }}@${{ env.EC2_HOST }} 
                 # Optionally remove the file afterward if the job is long-running and you want to be extra secure
                 rm web-server.pem
                 cd /home/ubuntu/app
