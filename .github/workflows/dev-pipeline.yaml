@@ -108,6 +108,7 @@ jobs:
             - name: Checkout code
               uses: actions/checkout@v2
 
+<<<<<<< HEAD
             - name: SSH server 
               env:
                 EC2_HOST: ${{ secrets.EC2_HOST }}
@@ -120,17 +121,18 @@ jobs:
                 ssh -i private_key.pem -o StrictHostKeyChecking=no \
                   ${EC2_USERNAME}@${EC2_HOST} << 'EOF'
                   mkdir -p /home/ubuntu/app
+
+
                   cd /home/ubuntu/app
                   git fetch origin feature
                   git reset --hard origin/feature
                   cd /home/ubuntu/app/deploy
                   docker-compose pull
                   docker-compose up -d
+
                 EOF
 
                 rm private_key.pem     
-
-            
 
           
 
