@@ -11,19 +11,9 @@ on:
 
 #step3 - (Where) this pipeline 
 jobs:
+  
         build:
           runs-on: ubuntu-latest
-
-# Step 4 - (What will be executed like steps)
-
-#---------------------------------#
-#push changes in feature
-#code testing - lint 
-#vulnerabilities testing
-#build docker images
-#push images - public/private 
-#deploy in docker compose for testing.  
-#---------------------------------#
 
           steps:
             - name: Checkout code
@@ -42,9 +32,6 @@ jobs:
                     python -m pip install --upgrade pip 
                     pip install --upgrade pip
                     pip install flake8
-
-            # - name: lint testing
-            #   run: flake8 --ignore=E501,F401 . 
 
             # Docker credentials
             - name: Login docker hub
@@ -112,9 +99,52 @@ jobs:
                 docker push ${{ secrets.DOCKER_USERNAME }}/gateway:dev-${{ env.SHORT_SHA }}
                 docker push ${{ secrets.DOCKER_USERNAME }}/gateway:dev-${{ env.IMAGE_TAG }}
 
+        deploy:
+          needs:
+            - build
+          runs-on: ubuntu-latest
+          environment: production
+
+
+          steps:
+            - name: Checkout code
+              uses: actions/checkout@v2
+
+            - name: SSH server 
+              env:
+                EC2_HOST: ${{ secrets.EC2_HOST }}
+                EC2_USERNAME: ${{ secrets.EC2_USERNAME }}
+                SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
+              run: |
+                echo "$SSH_PRIVATE_KEY" > private_key.pem
+                chmod 600 private_key.pem
+
+                ssh -i private_key.pem -o StrictHostKeyChecking=no \
+                  ${EC2_USERNAME}@${EC2_HOST} << 'EOF'
+                  mkdir -p /home/ubuntu/app
+
+
+                  cd /home/ubuntu/app
+
+                  git clone https://github.com/infosecsingh/NodeJS-Project-DevOps.git
+                  cd NodeJS-Project-DevOps/deploy
+                  docker-compose pull
+                  docker-compose up -d
+
+                EOF
+
+                rm private_key.pem     
+
+          
+
+
+
+
+        
+
 
  
-
+  
 
 
 
