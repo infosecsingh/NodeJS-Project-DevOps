@@ -1,0 +1,21 @@
+global:
+  scrape_interval: 5s
+
+scrape_configs:
+  # Python Backend
+  - job_name: 'python-backend'
+    metrics_path: /metrics
+    static_configs:        # <-- must be plural
+      - targets: ['backend:5000']
+        labels:
+          service: 'backend'
+          env: 'dev'
+
+  # Notification Server
+  - job_name: 'notification-server'
+    metrics_path: /metrics
+    static_configs:        # <-- must be plural
+      - targets: ['notification:3001']
+        labels:
+          service: 'notification'
+          env: 'dev'
