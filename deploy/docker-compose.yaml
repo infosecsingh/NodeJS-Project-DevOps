@@ -33,6 +33,23 @@ services:
       - notification
     networks:
       - app 
+  
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    depends_on:
+      - frontend
+      - backend
+      - notification
+      - gateway
+    networks:
+      - app 
+    volumes:
+      - ../monitoring-setup/prometheus-config.yaml:/etc/prometheus/prometheus.yml
+  
+
 
 networks:
   app:
